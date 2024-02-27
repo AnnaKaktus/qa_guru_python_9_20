@@ -2,6 +2,7 @@ import requests
 import allure
 import curlify
 import logging
+from selene import browser
 from allure_commons.types import AttachmentType
 
 BASE_URL = "https://demowebshop.tricentis.com/"
@@ -17,3 +18,8 @@ def send_request(url, **kwargs):
         )
         logging.info(curlify.to_curl(response.request))
         return response
+
+
+def remove_product():
+    browser.element(".remove-from-cart").click()
+    browser.element(".update-cart-button").press_enter()

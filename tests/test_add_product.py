@@ -3,14 +3,15 @@ import allure
 from selene import browser, have
 from dotenv import load_dotenv
 from tests.conftest import BASE_URL
-from utils.utils import send_request
+from utils.utils import send_request, remove_product
+
+load_dotenv()
+login = os.getenv("LOGIN")
+password = os.getenv("PASSWORD")
 
 
 @allure.title("Adding with params")
 def test_add_product_to_cart_with_params():
-    load_dotenv()
-    login = os.getenv("LOGIN")
-    password = os.getenv("PASSWORD')
     response = send_request(
         "login", data={"Email": {login}, "Password": {password}}, allow_redirects=False
     )
@@ -31,16 +32,12 @@ def test_add_product_to_cart_with_params():
     assert response2.status_code == 200
     browser.open(BASE_URL)
     browser.open(f"{BASE_URL}cart")
-    browser.element('.product-name').should(have.text("Build your own cheap computer"))
-    browser.element(".remove-from-cart").click()
-    browser.element(".update-cart-button").press_enter()
+    browser.element(".product-name").should(have.text("Build your own cheap computer"))
+    remove_product()
 
 
 @allure.title("Adding without params")
 def test_add_product_to_cart_without_params():
-    load_dotenv()
-    login = os.getenv('LOGIN')
-    password = os.getenv('PASSWORD')
     response = send_request(
         "login", data={"Email": {login}, "Password": {password}}, allow_redirects=False
     )
@@ -53,5 +50,4 @@ def test_add_product_to_cart_without_params():
     browser.open(BASE_URL)
     browser.open(f"{BASE_URL}cart")
     browser.element('.product-name').should(have.text("14.1-inch Laptop"))
-    browser.element(".remove-from-cart").click()
-    browser.element(".update-cart-button").press_enter()
+    remove_product()
